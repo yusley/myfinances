@@ -6,8 +6,8 @@ function App() {
 
   return (
 
-      <div className="w-full h-full">
-        <h1>salve</h1>
+      <div className="w-full h-full bg-amber-600">
+        <h1 className='text-9xl'>salve</h1>
       </div>
   )
 }
