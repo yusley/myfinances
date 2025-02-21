@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-body-color: #F0F2F5;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background-color: var(--color-body-color);
+}
+
