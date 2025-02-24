@@ -1,2 +1,18 @@
 @import "tailwindcss";
 
+.custom-scrollbar::-webkit-scrollbar {
+    height: 6px; /* Altura da barra de rolagem */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2); /* Cor da barra com transparência */
+    border-radius: 10px; /* Bordas arredondadas */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.4); /* Fica um pouco mais visível ao passar o mouse */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Fundo da scrollbar transparente */
+  }
