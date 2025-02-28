@@ -3,14 +3,16 @@ import { api } from "../services/api";
 
 interface Transaction {
     id: string
+    title: string
     price: string
+    type: string
     categoryId: string
     userId: string
     created_at: Date
     updated_at: Date
 }
 
-type TransactionInput = Omit<Transaction, 'id' | 'created_at' | 'updated_at'>
+export type TransactionInput = Omit<Transaction, 'id' | 'created_at' | 'updated_at'>
 
 interface TransactionsProviderProps {
     children: ReactNode
