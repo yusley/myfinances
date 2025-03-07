@@ -1,4 +1,4 @@
-import { useState,FormEvent, useEffect } from 'react';
+import { useState,FormEvent, useRef,useEffect } from 'react';
 import Modal from 'react-modal'
 import { useTransactions } from '../hooks/useTransaction';
 import { api } from '../services/api';
@@ -25,35 +25,46 @@ export function ModalComponent ({...props}: ModalComponentInterface) {
     const [typeTransaction,setTypeTransaction] = useState("Saida")
     const [category,setCategory] = useState("")
     const [price,setPrice] = useState("")
+    const inputRef = useRef<HTMLInputElement>(null);
     
 
     useEffect(() => {
       
       const listCategoryes = api.get('category')
       .then((response) => setCategoryes(response.data))
-      
 
     },[])
 
     const {createTransaction} = useTransactions();
 
+    
+
+
     const handleCreateTransaction = async (event:FormEvent) => {
       event.preventDefault()
-      props.closeModal()
       
+      
+
+      if(title.length < 3){
+        console.log('erro')
+        return;
+      }
+
       const transaction = {
         "title":title,
         "price": price,
         "type": typeTransaction,
-        "userId": "01a09edd-2e9d-4195-97cd-5da4d0f222ea",
+        "userId": "5eff9586-2a3e-4df1-9df4-ed7d3179c38f",
         "categoryId": category
       }
-      console.log(transaction)
-      const teste = await createTransaction(transaction)
-
-      console.log(teste)
       
+      const transactionCreated = await createTransaction(transaction)
 
+      props.closeModal()
+
+      return transactionCreated
+
+      
     }
 
     return (
@@ -106,15 +117,17 @@ export function ModalComponent ({...props}: ModalComponentInterface) {
                   onChange={(e) => setCategory(e.target.value)}
                 >
                 {categoryes.map((el:CategoryInterface) => (
-                  <option key={el.id} value={el.id}>{el.title}</option>
+                  <option selected key={el.id} value={el.id}>{el.title}</option>
                 ))}
 
                 
               </select>
               <input className='w-full p-[1rem] border-[1px] bg-[#F0F2F5] border-[#D7D7D7] rounded-[0.3rem] my-[0.5rem] focus:outline-none focus:ring-0' 
+                
                 placeholder="Preço" 
-                type="number"
+                type="text"
                 onChange={(e) => setPrice(e.target.value)}
+                value={price}
               />
               <input 
                 className='w-full bg-[#33CC95] p-[1rem] border-[1px] border-[#D7D7D7] rounded-[0.3rem] my-[1rem] text-[#FFFFFF] cursor-pointer' 

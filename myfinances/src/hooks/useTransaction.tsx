@@ -32,15 +32,18 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
   
     useEffect(() => {
       api.get('transactions')
-        .then(response => setTransactions(response.data.transactions))
+        .then(response => {
+          console.log(response.data)
+          setTransactions(response.data)
+        })
     }, []);
   
     async function createTransaction(transactionInput: TransactionInput) {
       const response = await api.post('/transactions', {
         ...transactionInput
       });
-      const { transaction } = response.data;
-  
+      const transaction  = response.data;
+      console.log(response.data)
       setTransactions([
         ...transactions,
         transaction,
