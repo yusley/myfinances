@@ -1,4 +1,6 @@
 import { FormEvent, useState } from "react"
+import { LoginFunction } from "../../services/login";
+import { Navigate } from "react-router";
 
 export function Login () {
 
@@ -16,7 +18,7 @@ export function Login () {
             
         }
 
-        
+        LoginFunction();
 
     }
 
