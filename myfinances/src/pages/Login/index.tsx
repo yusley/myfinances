@@ -1,25 +1,32 @@
 import { FormEvent, useState } from "react"
-import { LoginFunction } from "../../services/login";
-import { Navigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
+import { AuthContextData } from "../../hooks/useAuth";
 
 export function Login () {
 
-    const [user,setUser] = useState("");
+    const {login} = useAuth();
+
+    const [username,setUser] = useState("");
     const [password,setPassword] = useState("");
     const [error,setError] = useState("");
 
-    const handleLogin  = (e:FormEvent) => {
+
+    const handleLogin  = async (e:FormEvent) => {
+      
         e.preventDefault()
         setError("")
 
-        if(user.length < 11 || password.length < 3){
+        if(username.length < 11 || password.length < 3){
             setError("Usuário ou senha inválidos")
             console.log('erro')
             
         }
 
-        LoginFunction();
+        const loginReturn = await login(username,password)
+        
+        console.log(loginReturn)
 
+        
     }
 
     return(

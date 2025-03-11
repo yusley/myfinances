@@ -1,11 +1,14 @@
 import { createContext,ReactNode,useContext, useState } from "react";
-import { LoginFunction } from "../services/login";
+import { getToken } from "../services/login";
+import { AxiosResponse } from "axios";
+import { ResponseErrorInterface } from "../utils/errorClass";
 
+  
 export interface AuthContextData {
     logged: boolean
     id: string
     token: string
-    login: (user: string, password: string) => Promise<void>
+    login: (user: string, password: string) => Promise<ResponseErrorInterface | void>
 }
 
 
@@ -33,8 +36,23 @@ export function AuthProvider({children}: AuthProviderProps){
         login: async () => {}
     });
 
-    const  login = async (user: string, password: string) => {
+    const  login = async (username: string, password: string): Promise<ResponseErrorInterface | void> => {
+        try{
+            const token = await getToken(username,password) as AxiosResponse
+            
+            console.log(token)
+
+            if(token.status === 200){
+                console.log(token.data?.token)
+            }
+
+        }catch(error){
+            
+            return error as ResponseErrorInterface
+        }
+
         
+    
     }
     
     return(
