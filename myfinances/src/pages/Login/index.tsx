@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react"
 import { useAuth } from "../../hooks/useAuth";
-import { AuthContextData } from "../../hooks/useAuth";
 
 export function Login () {
 
@@ -22,10 +21,7 @@ export function Login () {
             
         }
 
-        const loginReturn = await login(username,password)
-        
-        console.log(loginReturn)
-
+        await login(username,password)
         
     }
 

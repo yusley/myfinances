@@ -12,14 +12,3 @@ export async function getToken(username: string, password: string){
         return new ErrorClass().errorReturn(error as Error)
     }
 }
-
-export async function VerifyToken(token:string) {
-
-    const assign = process.env.ASSINGN_TOKEN
-
-    // const decodeToken = jwt.decode(token)
-
-    // console.log(decodeToken)
-    
-
-}

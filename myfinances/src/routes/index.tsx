@@ -1,30 +1,25 @@
-import { Routes,Route, Navigate } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import App from "../App";
 import { Login } from "../pages/Login";
 import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
-import { defaultAuthContextData } from "../hooks/useAuth";
 import { NotFund } from "../pages/Notfound";
 
-export function Routers(){
+export function Routers() {
+    const { auth } = useAuth(); // Agora temos isLoading
 
-    const {logged} = defaultAuthContextData;
-
-    return(
+    return (
         <Routes>
-            {
-                logged === true ?
+            {auth ? ( // Verifica se o usuário está autenticado
                 <>
-                    <Route path="/" element={<App/>}/>
-                    <Route path="login" element={<Login/>}/>
-                    <Route path="*" element={<NotFund/>}/>
-                </> : 
-                <>
-                    <Route path="login" element={<Login/>}/>
-                    <Route path="*" element={<Navigate to="/login"/>} />
+                    <Route path="/" element={<App />} />
+                    <Route path="*" element={<Navigate to="/" />} />
                 </>
-                
-            }
+            ) : (
+                <>
+                    <Route path="login" element={<Login />} />
+                    <Route path="*" element={<Navigate to="/login" />} />
+                </>
+            )}
         </Routes>
-    )
+    );
 }

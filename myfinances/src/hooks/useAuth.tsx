@@ -1,21 +1,24 @@
 import { createContext,ReactNode,useContext, useState } from "react";
-import { getToken } from "../services/login";
+import { getToken } from "../services/getToken";
 import { AxiosResponse } from "axios";
 import { ResponseErrorInterface } from "../utils/errorClass";
+import { VerifyToken } from "../services/verifyToken";
 
   
-export interface AuthContextData {
-    logged: boolean
+export interface UserTokenDataInterface {
+    auth: boolean
     id: string
     token: string
-    login: (user: string, password: string) => Promise<ResponseErrorInterface | void>
+    permission?: string
+    login?: (user: string, password: string) => Promise<ResponseErrorInterface | AxiosResponse | void>
 }
 
 
-export const defaultAuthContextData: AuthContextData = {
-    logged: false,
+export const defaultAuthContextData: UserTokenDataInterface = {
+    auth: false,
     id: '',
     token: '',
+    permission: '',
     login: async () => {}
 }
 
@@ -23,27 +26,37 @@ interface AuthProviderProps {
     children: ReactNode
 }
 
-export const AuthContext = createContext<AuthContextData>(
-    {} as AuthContextData
+export const AuthContext = createContext<UserTokenDataInterface>(
+    {} as UserTokenDataInterface
 );
+
+
 
 export function AuthProvider({children}: AuthProviderProps){
 
-    const [auth,setAuth] = useState<AuthContextData>({
-        logged: false,
-        id: '',
-        token: '',
-        login: async () => {}
-    });
+    const [auth,setAuth] = useState<UserTokenDataInterface>(defaultAuthContextData);
 
-    const  login = async (username: string, password: string): Promise<ResponseErrorInterface | void> => {
+    const  login = async (username: string, password: string): Promise<ResponseErrorInterface | AxiosResponse | void> => {
         try{
-            const token = await getToken(username,password) as AxiosResponse
+            const responseToken = await getToken(username,password) as AxiosResponse
             
-            console.log(token)
 
-            if(token.status === 200){
-                console.log(token.data?.token)
+            if(responseToken.status === 200){
+                console.log(responseToken)
+                
+                const tokenData = await VerifyToken(responseToken.data?.token) as AxiosResponse
+
+                const newAuthState = {
+                    "auth": true,
+                    "id": tokenData.data.userId,
+                    "permission": tokenData.data.permission,
+                    "token": responseToken.data?.token
+                }
+
+                setAuth(newAuthState)
+
+                return responseToken
+             
             }
 
         }catch(error){
