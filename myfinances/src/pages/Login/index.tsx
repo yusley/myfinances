@@ -21,7 +21,7 @@ export function Login () {
             
         }
 
-        await login(username,password)
+        await login?.(username,password)
         
     }
 

@@ -42,7 +42,6 @@ export function AuthProvider({children}: AuthProviderProps){
             
 
             if(responseToken.status === 200){
-                console.log(responseToken)
                 
                 const tokenData = await VerifyToken(responseToken.data?.token) as AxiosResponse
 
@@ -55,17 +54,18 @@ export function AuthProvider({children}: AuthProviderProps){
 
                 setAuth(newAuthState)
 
-                return responseToken
+                return {
+                    message: 'sucess',
+                    status: responseToken.status,
+                    data: newAuthState
+                }
              
             }
 
         }catch(error){
-            
             return error as ResponseErrorInterface
         }
 
-        
-    
     }
     
     return(
