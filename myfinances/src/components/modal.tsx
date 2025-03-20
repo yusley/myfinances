@@ -1,8 +1,8 @@
 import { useState,FormEvent, useRef,useEffect } from 'react';
-import Modal from 'react-modal'
+import Modal, { contextType } from 'react-modal'
 import { useTransactions } from '../hooks/useTransaction';
 import { api } from '../services/api';
-
+import { useCookies } from 'react-cookie';
 
 interface CategoryInterface {
   id: string
@@ -19,8 +19,8 @@ interface ModalComponentInterface {
 
 export function ModalComponent ({...props}: ModalComponentInterface) {
 
+    const [cookies] = useCookies();
     const [categoryes,setCategoryes] = useState([])
-
     const [title,setTitle] = useState("")
     const [typeTransaction,setTypeTransaction] = useState("Saida")
     const [category,setCategory] = useState("")
@@ -30,7 +30,7 @@ export function ModalComponent ({...props}: ModalComponentInterface) {
 
     useEffect(() => {
       
-      const listCategoryes = api.get('category')
+      const listCategoryes = api.get('category', {headers: {'Authorization': `Bearer ${cookies.token}` }} )
       .then((response) => setCategoryes(response.data))
 
     },[])

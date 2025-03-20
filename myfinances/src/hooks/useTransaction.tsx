@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, ReactNode, useContext } from "react";
 import { api } from "../services/api";
-
+import { useCookies } from "react-cookie";
 interface Transaction {
     id: string
     title: string
@@ -28,10 +28,12 @@ export const TransactionsContext = createContext<TransactionContextData>(
 );
 
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
+    const [cookies] = useCookies();
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-  
+
+
     useEffect(() => {
-      api.get('transactions')
+      api.get('transactions', {headers:{'Authorization': `Bearer ${cookies.token}`}})
         .then(response => {
           console.log(response.data)
           setTransactions(response.data)
@@ -39,8 +41,9 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
     }, []);
   
     async function createTransaction(transactionInput: TransactionInput) {
-      const response = await api.post('/transactions', {
-        ...transactionInput
+      console.log(cookies.token)
+      const response = await api.post('/transactions',{...transactionInput}, {
+        headers:{'Authorization': `Bearer ${cookies.token}`}
       });
       const transaction  = response.data;
       console.log(response.data)
