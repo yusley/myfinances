@@ -3,10 +3,10 @@ import { getToken } from "../services/getToken";
 import { AxiosResponse } from "axios";
 import { ResponseErrorInterface } from "../utils/errorClass";
 import { VerifyToken } from "../services/verifyToken";
-
+import { useCookies } from "react-cookie";
   
 export interface UserTokenDataInterface {
-    auth: boolean
+
     id: string
     token: string
     permission?: string
@@ -15,7 +15,6 @@ export interface UserTokenDataInterface {
 
 
 export const defaultAuthContextData: UserTokenDataInterface = {
-    auth: false,
     id: '',
     token: '',
     permission: '',
@@ -33,7 +32,7 @@ export const AuthContext = createContext<UserTokenDataInterface>(
 
 
 export function AuthProvider({children}: AuthProviderProps){
-
+    const [cookie,setCookie, removeCookie] = useCookies(['token']);
     const [auth,setAuth] = useState<UserTokenDataInterface>(defaultAuthContextData);
 
     const  login = async (username: string, password: string): Promise<ResponseErrorInterface | AxiosResponse | void> => {
@@ -44,15 +43,19 @@ export function AuthProvider({children}: AuthProviderProps){
             if(responseToken.status === 200){
                 
                 const tokenData = await VerifyToken(responseToken.data?.token) as AxiosResponse
-
+                
                 const newAuthState = {
                     "auth": true,
                     "id": tokenData.data.userId,
                     "permission": tokenData.data.permission,
                     "token": responseToken.data?.token
                 }
+                
+                setCookie('token',newAuthState.token,{path:'/'})
 
                 setAuth(newAuthState)
+
+                console.log(newAuthState.token)
 
                 return {
                     message: 'sucess',
